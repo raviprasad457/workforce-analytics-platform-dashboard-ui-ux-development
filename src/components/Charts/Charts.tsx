@@ -64,9 +64,11 @@ export const Charts: React.FC = () => {
         sx={{
           p: { xs: 2, sm: 3 },
           borderRadius: 3.5,
-          minHeight: 390,
+          minHeight: 410,
           border: '1px solid',
           borderColor: 'divider',
+          display: 'flex',
+          flexDirection: 'column',
           boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
         }}
       >

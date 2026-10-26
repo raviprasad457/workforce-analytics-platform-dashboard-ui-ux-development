@@ -102,7 +102,7 @@ export const WorkforceDonutChart: React.FC = () => {
 
       {/* Donut Chart with Center Metric */}
       <Box sx={{ position: 'relative', height: 230, width: '100%', my: 'auto' }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={230}>
           <PieChart>
             <Tooltip content={<CustomPieTooltip />} />
             <Pie
