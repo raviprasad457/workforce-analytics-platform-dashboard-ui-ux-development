@@ -90,8 +90,8 @@ export const Header: React.FC = () => {
         position="sticky"
         elevation={0}
         sx={{
-          bgcolor: theme.palette.mode === 'dark' ? 'rgba(17, 24, 39, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(12px)',
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(11, 17, 32, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(16px)',
           borderBottom: '1px solid',
           borderColor: 'divider',
           color: 'text.primary',
@@ -117,6 +117,9 @@ export const Header: React.FC = () => {
                 borderColor: 'divider',
                 borderRadius: 2,
                 p: 0.9,
+                '&:hover': {
+                  bgcolor: (t) => t.palette.mode === 'dark' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(79, 70, 229, 0.08)',
+                },
               }}
             >
               <MenuIcon fontSize="small" />
@@ -124,10 +127,20 @@ export const Header: React.FC = () => {
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                Enterprise Platform /
+                Enterprise India /
               </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 800, fontSize: { sm: '1rem', md: '1.15rem' }, lineHeight: 1.1 }}>
-                Workforce Analytics
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 800,
+                  fontSize: { sm: '1rem', md: '1.15rem' },
+                  lineHeight: 1.1,
+                  background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Workforce & Attendance Radar
               </Typography>
             </Box>
           </Box>
@@ -137,7 +150,7 @@ export const Header: React.FC = () => {
             sx={{
               display: { xs: 'none', md: 'flex' },
               alignItems: 'center',
-              bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#f1f5f9',
+              bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.06)' : '#f1f5f9',
               border: '1px solid',
               borderColor: 'divider',
               borderRadius: 3,
@@ -146,14 +159,15 @@ export const Header: React.FC = () => {
               width: { md: 240, lg: 320 },
               transition: 'all 0.2s ease',
               '&:focus-within': {
-                borderColor: 'primary.main',
-                boxShadow: (t) => `0 0 0 3px ${t.palette.mode === 'dark' ? 'rgba(99,102,241,0.2)' : 'rgba(79,70,229,0.1)'}`,
+                borderColor: '#4f46e5',
+                boxShadow: (t) =>
+                  `0 0 0 3px ${t.palette.mode === 'dark' ? 'rgba(99,102,241,0.25)' : 'rgba(79,70,229,0.15)'}`,
               },
             }}
           >
-            <SearchIcon sx={{ color: 'text.secondary', fontSize: 20, mr: 1 }} />
+            <SearchIcon sx={{ color: '#4f46e5', fontSize: 20, mr: 1 }} />
             <InputBase
-              placeholder="Search employee, ID, role..."
+              placeholder="Search Indian roster, ID, role..."
               value={filters.search}
               onChange={handleSearchChange}
               sx={{ fontSize: '0.875rem', width: '100%' }}
@@ -162,13 +176,13 @@ export const Header: React.FC = () => {
             <Typography
               variant="caption"
               sx={{
-                bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#e2e8f0',
+                bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : '#e2e8f0',
                 px: 0.8,
                 py: 0.2,
                 borderRadius: 1,
                 fontSize: '0.7rem',
                 color: 'text.secondary',
-                fontWeight: 600,
+                fontWeight: 700,
               }}
             >
               ⌘K
@@ -177,10 +191,10 @@ export const Header: React.FC = () => {
 
           {/* Right: Simulation State Selector, Theme Toggle, Notifications & Profile */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1.5 } }}>
-            {/* Interactive Simulation Switcher (Showcases Loading, Error, Empty states) */}
+            {/* Interactive Simulation Switcher */}
             {!isTablet && (
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 1 }}>
-                <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1, fontWeight: 700, fontSize: '0.7rem' }}>
+                <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1, fontWeight: 800, fontSize: '0.7rem' }}>
                   STATE DEMO:
                 </Typography>
                 <ToggleButtonGroup
@@ -195,16 +209,16 @@ export const Header: React.FC = () => {
                       px: 1.2,
                       py: 0,
                       fontSize: '0.72rem',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       textTransform: 'none',
                       borderRadius: 1.5,
                     },
                   }}
                 >
-                  <ToggleButton value="normal" aria-label="normal state">
+                  <ToggleButton value="normal" aria-label="normal live view">
                     <Tooltip title="Normal Live View">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
-                        <CheckCircleIcon sx={{ fontSize: 13, color: 'success.main' }} />
+                        <CheckCircleIcon sx={{ fontSize: 13, color: '#10b981' }} />
                         <span>Live</span>
                       </Box>
                     </Tooltip>
@@ -212,7 +226,7 @@ export const Header: React.FC = () => {
                   <ToggleButton value="loading" aria-label="loading skeleton state">
                     <Tooltip title="Skeleton Loading State">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
-                        <HourglassEmptyIcon sx={{ fontSize: 13, color: 'info.main' }} />
+                        <HourglassEmptyIcon sx={{ fontSize: 13, color: '#06b6d4' }} />
                         <span>Loading</span>
                       </Box>
                     </Tooltip>
@@ -220,15 +234,15 @@ export const Header: React.FC = () => {
                   <ToggleButton value="error" aria-label="error banner state">
                     <Tooltip title="Error & Retry State">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
-                        <ErrorIcon sx={{ fontSize: 13, color: 'error.main' }} />
+                        <ErrorIcon sx={{ fontSize: 13, color: '#ef4444' }} />
                         <span>Error</span>
                       </Box>
                     </Tooltip>
                   </ToggleButton>
-                  <ToggleButton value="empty" aria-label="empty no data state">
+                  <ToggleButton value="empty" aria-label="empty filter state">
                     <Tooltip title="Empty Filter State">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
-                        <FilterAltOffIcon sx={{ fontSize: 13, color: 'warning.main' }} />
+                        <FilterAltOffIcon sx={{ fontSize: 13, color: '#f59e0b' }} />
                         <span>Empty</span>
                       </Box>
                     </Tooltip>
@@ -238,7 +252,7 @@ export const Header: React.FC = () => {
             )}
 
             {/* Refresh / Re-fetch button */}
-            <Tooltip title="Refresh Dashboard Data">
+            <Tooltip title="Refresh Telemetry Data">
               <IconButton
                 onClick={refreshData}
                 size="small"
@@ -247,6 +261,7 @@ export const Header: React.FC = () => {
                   borderColor: 'divider',
                   borderRadius: 2,
                   p: 0.8,
+                  color: '#4f46e5',
                 }}
               >
                 <RefreshIcon fontSize="small" />
@@ -265,8 +280,8 @@ export const Header: React.FC = () => {
                   borderColor: 'divider',
                   borderRadius: 2,
                   p: 0.8,
-                  transition: 'transform 0.2s ease',
-                  '&:hover': { transform: 'rotate(15deg)' },
+                  transition: 'all 0.25s ease',
+                  '&:hover': { transform: 'rotate(20deg)', bgcolor: 'rgba(245, 158, 11, 0.15)' },
                 }}
               >
                 {themeMode === 'light' ? (
@@ -290,15 +305,15 @@ export const Header: React.FC = () => {
                   p: 0.8,
                 }}
               >
-                <Badge badgeContent={3} color="primary" variant="dot">
-                  <NotificationsNoneOutlinedIcon fontSize="small" />
+                <Badge badgeContent={3} color="error" variant="dot">
+                  <NotificationsNoneOutlinedIcon fontSize="small" sx={{ color: '#06b6d4' }} />
                 </Badge>
               </IconButton>
             </Tooltip>
 
             <Divider orientation="vertical" flexItem sx={{ height: 28, my: 'auto', mx: 0.5 }} />
 
-            {/* User Profile Dropdown */}
+            {/* Indian User Profile: Rajeshwari Patel */}
             <Box
               onClick={handleOpenProfile}
               sx={{
@@ -321,17 +336,17 @@ export const Header: React.FC = () => {
                 color="success"
               >
                 <Avatar
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-                  alt="Elena Vance"
-                  sx={{ width: 34, height: 34, border: '2px solid', borderColor: 'primary.main' }}
+                  src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop&q=80"
+                  alt="Rajeshwari Patel"
+                  sx={{ width: 36, height: 36, border: '2px solid', borderColor: '#4f46e5' }}
                 />
               </Badge>
               <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
-                <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.1 }}>
-                  Elena Vance
+                <Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.1 }}>
+                  Rajeshwari Patel
                 </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.72rem' }}>
-                  VP People & Culture
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.72rem', fontWeight: 600 }}>
+                  VP People & Culture (India)
                 </Typography>
               </Box>
             </Box>
@@ -354,30 +369,30 @@ export const Header: React.FC = () => {
         slotProps={{
           paper: {
             sx: {
-              width: 220,
+              width: 240,
               borderRadius: 3,
               mt: 1,
-              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)',
+              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
             },
           },
         }}
       >
         <Box sx={{ px: 2, py: 1.5 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-            Elena Vance
+          <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>
+            Rajeshwari Patel
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            elena.vance@workforceiq.com
+            rajeshwari.patel@workforceiq.in
           </Typography>
         </Box>
         <Divider />
         <MenuItem onClick={handleCloseProfile}>
-          <SettingsOutlinedIcon fontSize="small" sx={{ mr: 1.5, color: 'text.secondary' }} />
-          Account Settings
+          <SettingsOutlinedIcon fontSize="small" sx={{ mr: 1.5, color: '#4f46e5' }} />
+          Account & Hub Settings
         </MenuItem>
         <MenuItem onClick={handleCloseProfile}>
-          <HelpIcon fontSize="small" sx={{ mr: 1.5, color: 'text.secondary' }} />
-          Documentation & Help
+          <HelpIcon fontSize="small" sx={{ mr: 1.5, color: '#06b6d4' }} />
+          India Compliance Guidelines
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleCloseProfile} sx={{ color: 'error.main' }}>

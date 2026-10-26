@@ -17,6 +17,9 @@ interface DashboardContextType {
   toggleSidebar: () => void;
   mobileDrawerOpen: boolean;
   setMobileDrawerOpen: (open: boolean) => void;
+  activeNavSection: string;
+  setActiveNavSection: (section: string) => void;
+  handleNavigate: (sectionId: string) => void;
   filters: FilterState;
   setFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
   resetFilters: () => void;
@@ -62,6 +65,7 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Sidebar states
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [activeNavSection, setActiveNavSection] = useState('dashboard');
 
   const toggleSidebar = () => {
     setSidebarCollapsed((prev) => !prev);
@@ -79,6 +83,37 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const resetFilters = () => {
     setFilters(initialFilters);
+  };
+
+  // Handle sidebar navigation action
+  const handleNavigate = (sectionId: string) => {
+    setActiveNavSection(sectionId);
+    setMobileDrawerOpen(false);
+
+    if (sectionId === 'leaves') {
+      setFilter('status', 'On Leave');
+      const el = document.getElementById('workforce-table-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionId === 'workforce') {
+      setFilter('status', '');
+      const el = document.getElementById('workforce-table-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionId === 'attendance') {
+      const el = document.getElementById('attendance-chart-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionId === 'departments') {
+      const el = document.getElementById('department-chart-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionId === 'analytics') {
+      const el = document.getElementById('visual-charts-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionId === 'dashboard') {
+      const el = document.getElementById('kpi-cards-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionId === 'reports') {
+      const el = document.getElementById('filters-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const activeFilterCount = useMemo(() => {
@@ -170,6 +205,9 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         toggleSidebar,
         mobileDrawerOpen,
         setMobileDrawerOpen,
+        activeNavSection,
+        setActiveNavSection,
+        handleNavigate,
         filters,
         setFilter,
         resetFilters,

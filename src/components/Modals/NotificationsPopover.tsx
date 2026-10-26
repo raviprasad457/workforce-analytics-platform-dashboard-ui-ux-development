@@ -25,27 +25,27 @@ interface NotificationsPopoverProps {
 const mockNotifications = [
   {
     id: 1,
-    title: 'High Attendance Milestone Reached',
-    description: 'Engineering department crossed 98% attendance benchmark today.',
-    time: '12m ago',
+    title: 'Bengaluru Campus Attendance Milestone',
+    description: 'Engineering and Product teams crossed 98.6% attendance benchmark today.',
+    time: '10m ago',
     type: 'success',
-    icon: <CheckCircleIcon color="success" fontSize="small" />,
+    icon: <CheckCircleIcon sx={{ color: '#10b981' }} fontSize="small" />,
   },
   {
     id: 2,
-    title: 'Leave Request Pending Review',
-    description: 'Elena Rostova submitted a medical leave request for 3 days.',
-    time: '45m ago',
+    title: 'Diwali Festive Leave Approved',
+    description: 'Vikramaditya Verma confirmed optional leave roster for Mumbai team.',
+    time: '42m ago',
     type: 'warning',
-    icon: <BeachAccessIcon color="warning" fontSize="small" />,
+    icon: <BeachAccessIcon sx={{ color: '#f59e0b' }} fontSize="small" />,
   },
   {
     id: 3,
-    title: 'Late Arrival Alert',
-    description: 'Transit disruptions reported in SF hub (+12 late clock-ins).',
+    title: 'Metro Delay Alert (Hyderabad)',
+    description: 'Hitec City metro line delay reported (+18 late check-ins logged).',
     time: '1h ago',
     type: 'info',
-    icon: <WarningAmberIcon color="info" fontSize="small" />,
+    icon: <WarningAmberIcon sx={{ color: '#06b6d4' }} fontSize="small" />,
   },
 ];
 
@@ -74,16 +74,16 @@ export const NotificationsPopover: React.FC<NotificationsPopoverProps> = ({
             maxHeight: 460,
             p: 0,
             borderRadius: 3,
-            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)',
+            boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
           },
         },
       }}
     >
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-          Notifications
+        <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
+          India Hub Notifications
         </Typography>
-        <Chip label="3 New" size="small" color="primary" sx={{ height: 22, fontSize: '0.75rem' }} />
+        <Chip label="3 New" size="small" color="primary" sx={{ height: 22, fontSize: '0.75rem', fontWeight: 700 }} />
       </Box>
       <Divider />
       <List sx={{ p: 0 }}>
@@ -96,7 +96,7 @@ export const NotificationsPopover: React.FC<NotificationsPopoverProps> = ({
                 py: 1.5,
                 '&:hover': {
                   bgcolor: (theme) =>
-                    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)',
+                    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
                 },
               }}
             >
@@ -115,7 +115,7 @@ export const NotificationsPopover: React.FC<NotificationsPopoverProps> = ({
               <ListItemText
                 primary={
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>
                       {notif.title}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -136,7 +136,7 @@ export const NotificationsPopover: React.FC<NotificationsPopoverProps> = ({
       </List>
       <Divider />
       <Box sx={{ p: 1, textAlign: 'center' }}>
-        <Button size="small" fullWidth onClick={onClose} sx={{ fontSize: '0.8rem' }}>
+        <Button size="small" fullWidth onClick={onClose} sx={{ fontSize: '0.8rem', fontWeight: 700 }}>
           Mark All As Read
         </Button>
       </Box>

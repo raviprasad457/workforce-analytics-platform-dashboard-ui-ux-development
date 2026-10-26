@@ -14,7 +14,7 @@ export const Charts: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
+    <Box id="visual-charts-section" sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
       {/* Top Grid: Attendance Trend (2/3) + Workforce Composition Donut (1/3) */}
       <Box
         sx={{
@@ -24,15 +24,17 @@ export const Charts: React.FC = () => {
         }}
       >
         <Paper
+          id="attendance-chart-section"
           elevation={0}
           sx={{
             p: { xs: 2, sm: 3 },
-            borderRadius: 3,
-            minHeight: 380,
+            borderRadius: 3.5,
+            minHeight: 390,
             border: '1px solid',
             borderColor: 'divider',
             display: 'flex',
             flexDirection: 'column',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
           }}
         >
           <AttendanceTrendChart />
@@ -42,12 +44,13 @@ export const Charts: React.FC = () => {
           elevation={0}
           sx={{
             p: { xs: 2, sm: 3 },
-            borderRadius: 3,
-            minHeight: 380,
+            borderRadius: 3.5,
+            minHeight: 390,
             border: '1px solid',
             borderColor: 'divider',
             display: 'flex',
             flexDirection: 'column',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
           }}
         >
           <WorkforceDonutChart />
@@ -56,13 +59,15 @@ export const Charts: React.FC = () => {
 
       {/* Bottom Grid: Department-wise Employee Distribution (Full Width) */}
       <Paper
+        id="department-chart-section"
         elevation={0}
         sx={{
           p: { xs: 2, sm: 3 },
-          borderRadius: 3,
-          minHeight: 380,
+          borderRadius: 3.5,
+          minHeight: 390,
           border: '1px solid',
           borderColor: 'divider',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
         }}
       >
         <DepartmentDistributionChart />

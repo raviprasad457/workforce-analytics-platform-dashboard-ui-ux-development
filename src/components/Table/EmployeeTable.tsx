@@ -22,6 +22,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { useDashboard } from '../../context/DashboardContext';
 import type { Employee, EmployeeStatus } from '../../types';
 import { EmptyStateView } from '../Common/StateViews';
@@ -29,8 +30,27 @@ import { EmptyStateView } from '../Common/StateViews';
 type Order = 'asc' | 'desc';
 type OrderBy = keyof Employee;
 
+const getDeptBadgeColor = (dept: string) => {
+  switch (dept) {
+    case 'Engineering':
+      return { bg: 'rgba(59, 130, 246, 0.12)', text: '#3b82f6', border: 'rgba(59, 130, 246, 0.3)' };
+    case 'Product & Design':
+      return { bg: 'rgba(139, 92, 246, 0.12)', text: '#8b5cf6', border: 'rgba(139, 92, 246, 0.3)' };
+    case 'Sales':
+      return { bg: 'rgba(16, 185, 129, 0.12)', text: '#10b981', border: 'rgba(16, 185, 129, 0.3)' };
+    case 'Marketing':
+      return { bg: 'rgba(245, 158, 11, 0.12)', text: '#f59e0b', border: 'rgba(245, 158, 11, 0.3)' };
+    case 'Human Resources':
+      return { bg: 'rgba(236, 72, 153, 0.12)', text: '#ec4899', border: 'rgba(236, 72, 153, 0.3)' };
+    case 'Finance':
+      return { bg: 'rgba(6, 182, 212, 0.12)', text: '#06b6d4', border: 'rgba(6, 182, 212, 0.3)' };
+    default:
+      return { bg: 'rgba(99, 102, 241, 0.12)', text: '#6366f1', border: 'rgba(99, 102, 241, 0.3)' };
+  }
+};
+
 export const EmployeeTable: React.FC = () => {
-  const { filteredEmployees, setSelectedEmployee, simulationState } = useDashboard();
+  const { filteredEmployees, setSelectedEmployee, simulationState, filters, setFilter } = useDashboard();
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<OrderBy>('name');
@@ -87,28 +107,28 @@ export const EmployeeTable: React.FC = () => {
     setPage(0);
   };
 
-  const getStatusColor = (status: EmployeeStatus) => {
+  const getStatusBadge = (status: EmployeeStatus) => {
     switch (status) {
       case 'Active':
-        return 'success';
+        return { label: 'Active', color: '#10b981', bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)' };
       case 'Late':
-        return 'warning';
+        return { label: 'Late', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)' };
       case 'On Leave':
-        return 'info';
+        return { label: 'On Leave', color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)', border: 'rgba(6, 182, 212, 0.3)' };
       case 'Remote':
-        return 'secondary';
+        return { label: 'Remote', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)' };
       case 'Probation':
-        return 'default';
+        return { label: 'Probation', color: '#f97316', bg: 'rgba(249, 115, 22, 0.12)', border: 'rgba(249, 115, 22, 0.3)' };
       default:
-        return 'default';
+        return { label: status, color: '#64748b', bg: 'rgba(100, 116, 139, 0.12)', border: 'rgba(100, 116, 139, 0.3)' };
     }
   };
 
   if (simulationState === 'empty' || displayedEmployees.length === 0) {
     return (
       <EmptyStateView
-        title="No Employees Found"
-        description="Try adjusting your department, location, or search keywords to see matching roster members."
+        title="No Indian Personnel Records Found"
+        description="Try adjusting your department, location, or search keywords to view registered team members."
       />
     );
   }
@@ -120,13 +140,14 @@ export const EmployeeTable: React.FC = () => {
 
   return (
     <Paper
+      id="workforce-table-section"
       elevation={0}
       sx={{
         p: { xs: 2, sm: 2.5 },
-        mt: 3,
-        borderRadius: 3,
+        borderRadius: 3.5,
         border: '1px solid',
         borderColor: 'divider',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
       }}
     >
       {/* Table Header Controls */}
@@ -140,22 +161,60 @@ export const EmployeeTable: React.FC = () => {
           gap: 1.5,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <PeopleAltIcon color="primary" fontSize="small" />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+          <Box
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+            }}
+          >
+            <PeopleAltIcon fontSize="small" />
+          </Box>
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              Workforce Roster & Attendance Status
+            <Typography variant="h6" sx={{ fontWeight: 800 }}>
+              Indian Workforce Roster & Telemetry
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Showing {displayedEmployees.length} registered personnel
+              Displaying {displayedEmployees.length} registered team members across India campuses
             </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        {/* Quick Filter Pill Buttons & Search */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.8 }}>
+            {['', 'Active', 'On Leave', 'Late', 'Remote'].map((st) => (
+              <Chip
+                key={st || 'All'}
+                label={st || 'All (15)'}
+                size="small"
+                onClick={() => setFilter('status', st)}
+                sx={{
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  fontSize: '0.72rem',
+                  borderRadius: 1.5,
+                  bgcolor: (filters.status === st) ? '#4f46e5' : 'transparent',
+                  color: (filters.status === st) ? '#ffffff' : 'text.secondary',
+                  border: '1px solid',
+                  borderColor: (filters.status === st) ? '#4f46e5' : 'divider',
+                  '&:hover': {
+                    bgcolor: (filters.status === st) ? '#4338ca' : 'rgba(79, 70, 229, 0.08)',
+                  },
+                }}
+              />
+            ))}
+          </Box>
+
           <TextField
             size="small"
-            placeholder="Search roster..."
+            placeholder="Search Indian roster..."
             value={tableSearch}
             onChange={(e) => {
               setTableSearch(e.target.value);
@@ -165,7 +224,7 @@ export const EmployeeTable: React.FC = () => {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+                    <SearchIcon fontSize="small" sx={{ color: '#4f46e5' }} />
                   </InputAdornment>
                 ),
               },
@@ -184,21 +243,21 @@ export const EmployeeTable: React.FC = () => {
           <TableHead
             sx={{
               bgcolor: (theme) =>
-                theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : '#f8fafc',
+                theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : '#f8fafc',
             }}
           >
             <TableRow>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>ID</TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>ID</TableCell>
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>
                 <TableSortLabel
                   active={orderBy === 'name'}
                   direction={orderBy === 'name' ? order : 'asc'}
                   onClick={() => handleRequestSort('name')}
                 >
-                  Employee
+                  Employee Name
                 </TableSortLabel>
               </TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>
                 <TableSortLabel
                   active={orderBy === 'department'}
                   direction={orderBy === 'department' ? order : 'asc'}
@@ -207,131 +266,173 @@ export const EmployeeTable: React.FC = () => {
                   Department & Role
                 </TableSortLabel>
               </TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>Location / Mode</TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>Location / Mode</TableCell>
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>
                 <TableSortLabel
                   active={orderBy === 'attendanceRate'}
                   direction={orderBy === 'attendanceRate' ? order : 'asc'}
                   onClick={() => handleRequestSort('attendanceRate')}
                 >
-                  Reliability Rate
+                  Attendance Rate
                 </TableSortLabel>
               </TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.78rem' }}>Check-in</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 700, fontSize: '0.78rem' }}>
-                Actions
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>Status</TableCell>
+              <TableCell sx={{ fontWeight: 800, fontSize: '0.78rem' }}>Clock-in</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 800, fontSize: '0.78rem' }}>
+                Action
               </TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {paginatedData.map((emp) => (
-              <TableRow
-                key={emp.id}
-                hover
-                onClick={() => setSelectedEmployee(emp)}
-                sx={{
-                  cursor: 'pointer',
-                  '&:last-child td, &:last-child th': { border: 0 },
-                }}
-              >
-                <TableCell sx={{ fontSize: '0.8rem', fontWeight: 600, color: 'text.secondary' }}>
-                  {emp.id}
-                </TableCell>
+            {paginatedData.map((emp) => {
+              const deptColor = getDeptBadgeColor(emp.department);
+              const statusBadge = getStatusBadge(emp.status);
 
-                {/* Employee Avatar + Name + Email */}
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Avatar
-                      src={emp.avatar}
-                      alt={emp.name}
-                      sx={{ width: 36, height: 36, border: '1px solid', borderColor: 'divider' }}
+              return (
+                <TableRow
+                  key={emp.id}
+                  hover
+                  onClick={() => setSelectedEmployee(emp)}
+                  sx={{
+                    cursor: 'pointer',
+                    '&:last-child td, &:last-child th': { border: 0 },
+                    transition: 'background-color 0.15s ease',
+                  }}
+                >
+                  <TableCell sx={{ fontSize: '0.8rem', fontWeight: 700, color: 'text.secondary' }}>
+                    {emp.id}
+                  </TableCell>
+
+                  {/* Employee Avatar + Indian Name + Email */}
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Avatar
+                        src={emp.avatar}
+                        alt={emp.name}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          border: '2px solid',
+                          borderColor: statusBadge.color,
+                        }}
+                      />
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 800, color: 'text.primary' }}>
+                          {emp.name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {emp.email}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+
+                  {/* Department & Role with colorful badge */}
+                  <TableCell>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                      {emp.role}
+                    </Typography>
+                    <Chip
+                      label={emp.department}
+                      size="small"
+                      sx={{
+                        height: 20,
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        bgcolor: deptColor.bg,
+                        color: deptColor.text,
+                        border: `1px solid ${deptColor.border}`,
+                        mt: 0.3,
+                      }}
                     />
-                    <Box>
-                      <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                        {emp.name}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {emp.email}
+                  </TableCell>
+
+                  {/* Location & Work Mode */}
+                  <TableCell>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{emp.location}</Typography>
+                    <Chip
+                      label={emp.workMode}
+                      size="small"
+                      variant="outlined"
+                      sx={{ height: 18, fontSize: '0.68rem', mt: 0.3, fontWeight: 600 }}
+                    />
+                  </TableCell>
+
+                  {/* Attendance Reliability Index */}
+                  <TableCell sx={{ minWidth: 140 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                      <Typography variant="caption" sx={{ fontWeight: 800, color: '#10b981' }}>
+                        {emp.attendanceRate}%
                       </Typography>
                     </Box>
-                  </Box>
-                </TableCell>
-
-                {/* Department & Role */}
-                <TableCell>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {emp.role}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {emp.department}
-                  </Typography>
-                </TableCell>
-
-                {/* Location & Work Mode */}
-                <TableCell>
-                  <Typography variant="body2">{emp.location}</Typography>
-                  <Chip
-                    label={emp.workMode}
-                    size="small"
-                    variant="outlined"
-                    sx={{ height: 18, fontSize: '0.68rem', mt: 0.3 }}
-                  />
-                </TableCell>
-
-                {/* Attendance Reliability Index */}
-                <TableCell sx={{ minWidth: 140 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'success.main' }}>
-                      {emp.attendanceRate}%
-                    </Typography>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={emp.attendanceRate}
-                    color={emp.attendanceRate > 95 ? 'success' : emp.attendanceRate > 90 ? 'primary' : 'warning'}
-                    sx={{ height: 6, borderRadius: 3 }}
-                  />
-                </TableCell>
-
-                {/* Status Chip */}
-                <TableCell>
-                  <Chip
-                    label={emp.status}
-                    color={getStatusColor(emp.status) as any}
-                    size="small"
-                    sx={{ height: 22, fontWeight: 700, fontSize: '0.72rem' }}
-                  />
-                </TableCell>
-
-                {/* Check-in Time */}
-                <TableCell sx={{ fontSize: '0.8rem', fontWeight: 600 }}>
-                  {emp.checkInTime}
-                </TableCell>
-
-                {/* Actions */}
-                <TableCell align="right">
-                  <Tooltip title="View Profile">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedEmployee(emp);
-                      }}
+                    <LinearProgress
+                      variant="determinate"
+                      value={emp.attendanceRate}
                       sx={{
-                        border: '1px solid',
-                        borderColor: 'divider',
+                        height: 7,
+                        borderRadius: 3.5,
+                        bgcolor: 'rgba(16, 185, 129, 0.15)',
+                        '& .MuiLinearProgress-bar': {
+                          background: 'linear-gradient(90deg, #10b981 0%, #06b6d4 100%)',
+                          borderRadius: 3.5,
+                        },
+                      }}
+                    />
+                  </TableCell>
+
+                  {/* Colorful Status Chip with pulse dot */}
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 0.6,
+                        px: 1.2,
+                        py: 0.4,
                         borderRadius: 2,
-                        p: 0.7,
+                        bgcolor: statusBadge.bg,
+                        color: statusBadge.color,
+                        border: `1px solid ${statusBadge.border}`,
                       }}
                     >
-                      <VisibilityOutlinedIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
+                      <FiberManualRecordIcon sx={{ fontSize: 9, color: statusBadge.color }} />
+                      <Typography variant="caption" sx={{ fontWeight: 800, fontSize: '0.72rem' }}>
+                        {statusBadge.label}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+
+                  {/* Check-in Time */}
+                  <TableCell sx={{ fontSize: '0.8rem', fontWeight: 700 }}>
+                    {emp.checkInTime}
+                  </TableCell>
+
+                  {/* Actions */}
+                  <TableCell align="right">
+                    <Tooltip title="View Employee File">
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEmployee(emp);
+                        }}
+                        sx={{
+                          border: '1px solid',
+                          borderColor: 'divider',
+                          borderRadius: 2,
+                          p: 0.7,
+                          color: '#4f46e5',
+                          '&:hover': { bgcolor: 'rgba(79, 70, 229, 0.1)' },
+                        }}
+                      >
+                        <VisibilityOutlinedIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

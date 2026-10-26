@@ -47,7 +47,7 @@ export const Filters: React.FC = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `workforce_report_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `workforce_india_report_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -55,29 +55,49 @@ export const Filters: React.FC = () => {
 
   return (
     <Paper
+      id="filters-section"
       elevation={0}
       sx={{
         p: { xs: 2, sm: 2.5 },
         mt: 2.5,
-        borderRadius: 3,
+        borderRadius: 3.5,
         border: '1px solid',
         borderColor: 'divider',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
       }}
     >
       {/* Title & Filter Count */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FilterListIcon fontSize="small" color="primary" />
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            Global Telemetry Filters
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              borderRadius: 2,
+              bgcolor: 'rgba(79, 70, 229, 0.12)',
+              color: '#4f46e5',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <FilterListIcon fontSize="small" />
+          </Box>
+          <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
+            India Hub Filters & Telemetry Selectors
           </Typography>
           {activeFilterCount > 0 && (
             <Chip
               label={`${activeFilterCount} Active`}
               size="small"
-              color="primary"
-              variant="outlined"
-              sx={{ height: 20, fontSize: '0.72rem', fontWeight: 700 }}
+              sx={{
+                height: 22,
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                bgcolor: 'rgba(79, 70, 229, 0.15)',
+                color: '#4f46e5',
+                border: '1px solid rgba(79, 70, 229, 0.3)',
+              }}
             />
           )}
         </Box>
@@ -88,7 +108,14 @@ export const Filters: React.FC = () => {
             size="small"
             startIcon={<FileDownloadOutlinedIcon />}
             onClick={handleExportCSV}
-            sx={{ borderRadius: 2, fontSize: '0.8rem' }}
+            sx={{
+              borderRadius: 2,
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              borderColor: 'rgba(79, 70, 229, 0.4)',
+              color: '#4f46e5',
+              '&:hover': { bgcolor: 'rgba(79, 70, 229, 0.08)' },
+            }}
           >
             Export CSV
           </Button>
@@ -101,7 +128,7 @@ export const Filters: React.FC = () => {
                 size="small"
                 startIcon={<FilterAltOffIcon />}
                 onClick={resetFilters}
-                sx={{ borderRadius: 2, fontSize: '0.8rem' }}
+                sx={{ borderRadius: 2, fontSize: '0.8rem', fontWeight: 700 }}
               >
                 Clear All
               </Button>
@@ -132,10 +159,10 @@ export const Filters: React.FC = () => {
             value={filters.datePreset}
             label="Date Window"
             onChange={(e) => setFilter('datePreset', e.target.value as any)}
-            startAdornment={<CalendarMonthIcon fontSize="small" sx={{ mr: 0.8, color: 'text.secondary' }} />}
+            startAdornment={<CalendarMonthIcon fontSize="small" sx={{ mr: 0.8, color: '#4f46e5' }} />}
             sx={{ borderRadius: 2 }}
           >
-            <MenuItem value="today">Today (Live)</MenuItem>
+            <MenuItem value="today">Today (Live Telemetry)</MenuItem>
             <MenuItem value="7days">Last 7 Days</MenuItem>
             <MenuItem value="30days">Last 30 Days</MenuItem>
             <MenuItem value="90days">Last 90 Days (Quarter)</MenuItem>
@@ -166,17 +193,17 @@ export const Filters: React.FC = () => {
 
         {/* Location Filter */}
         <FormControl size="small" fullWidth>
-          <InputLabel id="filter-location-label">Office / Region</InputLabel>
+          <InputLabel id="filter-location-label">India Office / Campus</InputLabel>
           <Select
             labelId="filter-location-label"
             id="filter-location-select"
             value={filters.location}
-            label="Office / Region"
+            label="India Office / Campus"
             onChange={(e) => setFilter('location', e.target.value)}
             sx={{ borderRadius: 2 }}
           >
             <MenuItem value="">
-              <em>All Locations (Global)</em>
+              <em>All Indian Hubs (7)</em>
             </MenuItem>
             {LOCATIONS.map((loc) => (
               <MenuItem key={loc} value={loc}>
@@ -210,17 +237,17 @@ export const Filters: React.FC = () => {
 
         {/* Work Mode Filter */}
         <FormControl size="small" fullWidth>
-          <InputLabel id="filter-mode-label">Work Mode</InputLabel>
+          <InputLabel id="filter-mode-label">Work Arrangement</InputLabel>
           <Select
             labelId="filter-mode-label"
             id="filter-mode-select"
             value={filters.workMode}
-            label="Work Mode"
+            label="Work Arrangement"
             onChange={(e) => setFilter('workMode', e.target.value)}
             sx={{ borderRadius: 2 }}
           >
             <MenuItem value="">
-              <em>All Work Modes</em>
+              <em>All Arrangements</em>
             </MenuItem>
             {WORK_MODES.map((mode) => (
               <MenuItem key={mode} value={mode}>
@@ -234,8 +261,8 @@ export const Filters: React.FC = () => {
       {/* Active Filter Chips Bar */}
       {activeFilterCount > 0 && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2, flexWrap: 'wrap' }}>
-          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-            Applied:
+          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700 }}>
+            Active Filters:
           </Typography>
 
           {filters.datePreset !== 'today' && (
@@ -243,7 +270,7 @@ export const Filters: React.FC = () => {
               label={`Period: ${filters.datePreset}`}
               size="small"
               onDelete={() => setFilter('datePreset', 'today')}
-              sx={{ borderRadius: 1.5 }}
+              sx={{ borderRadius: 1.5, fontWeight: 700 }}
             />
           )}
 
@@ -253,17 +280,17 @@ export const Filters: React.FC = () => {
               size="small"
               color="primary"
               onDelete={() => setFilter('department', '')}
-              sx={{ borderRadius: 1.5 }}
+              sx={{ borderRadius: 1.5, fontWeight: 700 }}
             />
           )}
 
           {filters.location && (
             <Chip
-              label={`Location: ${filters.location}`}
+              label={`Hub: ${filters.location}`}
               size="small"
               color="info"
               onDelete={() => setFilter('location', '')}
-              sx={{ borderRadius: 1.5 }}
+              sx={{ borderRadius: 1.5, fontWeight: 700 }}
             />
           )}
 
@@ -273,7 +300,7 @@ export const Filters: React.FC = () => {
               size="small"
               color="warning"
               onDelete={() => setFilter('status', '')}
-              sx={{ borderRadius: 1.5 }}
+              sx={{ borderRadius: 1.5, fontWeight: 700 }}
             />
           )}
 
@@ -282,16 +309,16 @@ export const Filters: React.FC = () => {
               label={`Mode: ${filters.workMode}`}
               size="small"
               onDelete={() => setFilter('workMode', '')}
-              sx={{ borderRadius: 1.5 }}
+              sx={{ borderRadius: 1.5, fontWeight: 700 }}
             />
           )}
 
           {filters.search && (
             <Chip
-              label={`Search: "${filters.search}"`}
+              label={`Query: "${filters.search}"`}
               size="small"
               onDelete={() => setFilter('search', '')}
-              sx={{ borderRadius: 1.5 }}
+              sx={{ borderRadius: 1.5, fontWeight: 700 }}
             />
           )}
         </Box>

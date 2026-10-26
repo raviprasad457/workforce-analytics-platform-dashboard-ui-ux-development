@@ -5,6 +5,7 @@ import {
   Typography,
   Chip,
   Tooltip,
+  useTheme,
 } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -36,7 +37,9 @@ const getKPIIcon = (iconName: string) => {
 };
 
 export const KPICards: React.FC = () => {
-  const { kpis, simulationState } = useDashboard();
+  const theme = useTheme();
+  const { kpis, simulationState, handleNavigate } = useDashboard();
+  const isDark = theme.palette.mode === 'dark';
 
   if (simulationState === 'loading') {
     return <LoadingSkeletonKPI />;
@@ -44,6 +47,7 @@ export const KPICards: React.FC = () => {
 
   return (
     <Box
+      id="kpi-cards-section"
       sx={{
         display: 'grid',
         gridTemplateColumns: {
@@ -52,60 +56,69 @@ export const KPICards: React.FC = () => {
           md: 'repeat(3, 1fr)',
           lg: 'repeat(5, 1fr)',
         },
-        gap: 2,
+        gap: 2.2,
       }}
     >
       {kpis.map((kpi) => {
-        // Prepare sparkline data formatted for Recharts AreaChart
         const sparklineData = kpi.sparkline.map((val, idx) => ({ idx, val }));
 
         return (
           <Paper
             key={kpi.id}
             elevation={0}
+            onClick={() => {
+              if (kpi.metricType === 'attendance') handleNavigate('attendance');
+              else if (kpi.metricType === 'workforce') handleNavigate('workforce');
+              else if (kpi.metricType === 'leave') handleNavigate('leaves');
+            }}
             sx={{
-              p: 2.2,
-              borderRadius: 3,
+              p: 2.4,
+              borderRadius: 3.5,
               position: 'relative',
               overflow: 'hidden',
+              cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+              background: isDark
+                ? `linear-gradient(145deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.95) 100%)`
+                : `linear-gradient(145deg, #ffffff 0%, ${kpi.accentColor}08 100%)`,
+              transition: 'all 0.28s cubic-bezier(0.4, 0, 0.2, 1)',
               border: '1px solid',
-              borderColor: 'divider',
+              borderColor: isDark ? `${kpi.accentColor}30` : `${kpi.accentColor}25`,
+              boxShadow: isDark
+                ? `0 4px 20px -5px ${kpi.accentColor}20`
+                : `0 4px 20px -5px ${kpi.accentColor}15`,
               '&:hover': {
-                transform: 'translateY(-3px)',
-                boxShadow: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? '0 12px 20px -8px rgba(0, 0, 0, 0.5)'
-                    : '0 12px 20px -8px rgba(79, 70, 229, 0.12)',
+                transform: 'translateY(-4px)',
                 borderColor: kpi.accentColor,
+                boxShadow: `0 12px 28px -6px ${kpi.accentColor}35`,
               },
             }}
           >
-            {/* Top accent line */}
+            {/* Top Glowing Color Accent Bar */}
             <Box
               sx={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 right: 0,
-                height: 3,
-                bgcolor: kpi.accentColor,
+                height: 4,
+                background: `linear-gradient(90deg, ${kpi.accentColor} 0%, ${kpi.accentColor}88 100%)`,
+                boxShadow: `0 0 10px ${kpi.accentColor}`,
               }}
             />
 
-            {/* Title & Icon Header */}
+            {/* Title & Glowing Icon Header */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                 <Typography
                   variant="caption"
                   sx={{
                     color: 'text.secondary',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
+                    letterSpacing: '0.06em',
                     fontSize: '0.72rem',
                   }}
                 >
@@ -118,28 +131,30 @@ export const KPICards: React.FC = () => {
 
               <Box
                 sx={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 2,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2.5,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  bgcolor: `${kpi.accentColor}18`,
+                  background: `linear-gradient(135deg, ${kpi.accentColor}25 0%, ${kpi.accentColor}10 100%)`,
                   color: kpi.accentColor,
+                  border: `1px solid ${kpi.accentColor}35`,
+                  boxShadow: `0 4px 10px ${kpi.accentColor}20`,
                 }}
               >
                 {getKPIIcon(kpi.icon)}
               </Box>
             </Box>
 
-            {/* Value & Trend Badge */}
-            <Box sx={{ mb: 1 }}>
+            {/* Value & Colorful Trend Badge */}
+            <Box sx={{ mb: 1.2 }}>
               <Typography
                 variant="h4"
                 sx={{
-                  fontWeight: 800,
-                  letterSpacing: '-0.02em',
-                  fontSize: { xs: '1.65rem', sm: '1.8rem' },
+                  fontWeight: 900,
+                  letterSpacing: '-0.03em',
+                  fontSize: { xs: '1.75rem', sm: '1.95rem' },
                   color: 'text.primary',
                   lineHeight: 1.1,
                 }}
@@ -160,25 +175,28 @@ export const KPICards: React.FC = () => {
                   size="small"
                   color={kpi.isPositive ? 'success' : 'error'}
                   sx={{
-                    height: 20,
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
+                    height: 22,
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
                     px: 0.4,
+                    boxShadow: kpi.isPositive
+                      ? '0 2px 8px rgba(16, 185, 129, 0.25)'
+                      : '0 2px 8px rgba(239, 68, 68, 0.25)',
                   }}
                 />
-                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.72rem' }}>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.72rem', fontWeight: 600 }}>
                   {kpi.period}
                 </Typography>
               </Box>
             </Box>
 
             {/* Sparkline Visual Mini-Chart */}
-            <Box sx={{ width: '100%', height: 38, my: 0.5 }}>
+            <Box sx={{ width: '100%', height: 42, my: 0.5 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={sparklineData} margin={{ top: 2, right: 2, left: 2, bottom: 2 }}>
                   <defs>
                     <linearGradient id={`gradient-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={kpi.accentColor} stopOpacity={0.35} />
+                      <stop offset="0%" stopColor={kpi.accentColor} stopOpacity={0.45} />
                       <stop offset="100%" stopColor={kpi.accentColor} stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
@@ -186,7 +204,7 @@ export const KPICards: React.FC = () => {
                     type="monotone"
                     dataKey="val"
                     stroke={kpi.accentColor}
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     fill={`url(#gradient-${kpi.id})`}
                     isAnimationActive={true}
                   />
@@ -199,14 +217,15 @@ export const KPICards: React.FC = () => {
               variant="caption"
               sx={{
                 color: 'text.secondary',
-                fontSize: '0.72rem',
-                pt: 0.8,
+                fontSize: '0.73rem',
+                pt: 1,
                 borderTop: '1px solid',
                 borderColor: 'divider',
                 display: 'block',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
+                fontWeight: 500,
               }}
             >
               {kpi.subtitle}
